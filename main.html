@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>Raphaël · Growing Pie</title>
+        <link rel="stylesheet" href="Rapha%C3%ABl%20%C2%B7%20Growing%20Pie_files/demo.css" media="screen"><style type="text/css">:root #header + #content > #left > #rlblock_left,
+:root #content > #right > .dose > .dosesingle,
+:root #content > #center > .dose > .dosesingle
+{display:none !important;}</style>
+        <link rel="stylesheet" href="Rapha%C3%ABl%20%C2%B7%20Growing%20Pie_files/demo-print.css" media="print">
+        <style media="screen">
+            #holder {
+                height: 400px;
+                margin: -200px 0 0 -200px;
+                width: 400px;
+            }
+        </style>
+        <script src="mycode.js"></script>
+        <script src="Rapha%C3%ABl%20%C2%B7%20Growing%20Pie_files/raphael.js"></script>
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" href="piestyle.css">
+        <script src="jquery-2.2.2.js"></script>
+        <script src="jquery-ui-1.11.4/jquery-ui.js"></script>
+
+        <script>
+
+        $(function(){
+
+
+           $('ul').hide();
+
+            $('.move').draggable({
+                stack: ".move",
+                distance:0,
+                stop: function() {
+                    console.log('drag');
+                    $(this).addClass('selected');
+                }
+            });
+            $('.move').click(function() {
+                $(this).addClass('top').removeClass('bottom');
+                $(this).siblings().removeClass('top').addClass('bottom');
+
+            });
+        
+        });
+
+        function makeList() {
+
+            console.log('_Proteins:_')            
+            for (i = 0; i < $('.proteins.selected').length; i++) {
+            console.log($('.proteins.selected')[i].id);
+            }
+            
+            console.log('_Fruits:_')
+            for (i = 0; i < $('.fruits.selected').length; i++) {
+            console.log($('.fruits.selected')[i].id);
+            }
+
+            console.log('_Veggies:_')
+            for (i = 0; i < $('.veggies.selected').length; i++) {
+            console.log($('.veggies.selected')[i].id);
+            }
+
+            console.log('_Carbs:_')
+            for (i = 0; i < $('.carbs.selected').length; i++) {
+            console.log($('.carbs.selected')[i].id);
+            }
+            
+        }
+
+        </script>
+        
+
+        <script type="text/javascript">
+        $(document).ready( function () {
+                var r = Raphael("holder");
+
+                r.customAttributes.segment = function (x, y, r, a1, a2, i) {             // segment stores the return value of this function(ie path and fill)
+                    var flag = (a2 - a1) > 180,
+                        colors = ["#CC4444", "#8E7BDE", "#40A745", "#E0E436"];                         
+                    a1 = (a1 % 360) * Math.PI / 180;          //Don't understand this 
+                    a2 = (a2 % 360) * Math.PI / 180;          
+                    return {
+                        path: [["M", x, y], ["l", r * Math.cos(a1), r * Math.sin(a1)], ["A", r, r, 0, +flag, 1, x + r * Math.cos(a2), y + r * Math.sin(a2)], ["z"]],                    //SVG string
+                        fill: colors[i]                         //sends color as function of slice size
+                    };
+                };
+
+                function animate(ms) {
+                    var start = 0,
+                        val;
+                    for (i = 0; i < ii; i++) {       //what is ii?  
+                        val = 360 / total * data[i];    //total is the sum of all slices
+                        paths[i].animate({segment: [200, 200, 150, start, start += val, i]}, ms || 1500, "bounce");  // time defaults to 1500 if ms is NULL or undefined
+                        paths[i].angle = start - val / 2;
+                    } //this loop is what animates the changes
+                }
+
+                var data = [24, 92, 24, 52],
+                    paths = r.set(),
+                    total,
+                    start,
+                    bg = r.circle(200, 200, 0).attr({stroke: "#fff", "stroke-width": 2 });  //draws circle and sets its attributes
+                data = data.sort(function (a, b) { return b - a;}); //sorts data elements based on return value from function (are a and b attributes of data? if not, where do they come from?)
+
+                total = 0;
+                for (var i = 0, ii = data.length; i < ii; i++) {
+                    total += data[i];                   //total is sum of all slice sizes
+                }
+                start = 0;
+                for (i = 0; i < ii; i++) {
+                    var val = 360 / total * data[i];    //val is the angle of the slice in degrees
+                                                        //val = (data[i]/total)*360.
+                    (function (i, val) {
+                        var k = r.path().attr({segment: [200, 200, 1, start, start + val, i], stroke: "#fff"});
+                        k.dblclick(function () {
+                                       //path() instantiates svg path,sets its path, fill, and stroke attributes, and what should happen if it is clicked
+                            
+                            var temp = data[i]*1.5;
+                            total += temp-data[i];
+                            data[i] = temp;
+                            animate();
+
+                        });
+                        k.click(function() {
+
+                            if (this.id == 'slice1') {                                
+                                $('#proteins').show('fast');
+                            } else if (this.id == 'slice2') {
+                                $('#fruits').show('fast');
+                            } else if (this.id == 'slice3') {
+                                $('#veggies').show('fast');
+                            } else if (this.id == 'slice4') {
+                                $('#carbs').show('fast');
+                            }
+                        });
+                        k.hover(function() {
+                            //alert('a');
+                        }, function() {
+                            //alert('b');
+                        });
+                        /*k.mouseenter(function mouses () {
+                            alert("double-click!");
+                        });*/
+
+                        k.id = "slice"+k.id;
+                        paths.push(k);
+                    })(i, val);                 //calling function we just created
+                    start += val;
+                }
+                //bg.animate({r: 151}, 1000, "elastic");                                                   //animates pop-in for container
+                animate(1000);                              
+
+                //r.text(200, 20, "Click on segments to make them bigger.").attr({font: '100 20px "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif', fill: "#fff"});
+
+
+            });
+            
+        </script>
+    </head>
+    <body>
+
+        <ul id="veggies"> 
+            <li><span id = "tomato" class="ui-widget-content move veggies" ></span></li>
+            <li><span id = "carrot" class="ui-widget-content move veggies" ></span></li>
+            <li><span id = "greens" class="ui-widget-content move veggies" ></span></li>
+            <li><span id = "eggplant" class="ui-widget-content move veggies" ></span></li>
+            <li><span id = "capsicum" class="ui-widget-content move veggies"></span></li>
+        </ul>
+
+        <ul id="fruits"> 
+            <li><span id = "watermelon" class="ui-widget-content move fruits" ></span></li>
+            <li><span id = "banana" class="ui-widget-content move fruits" ></span></li>
+            <li><span id = "grapes" class="ui-widget-content move fruits" ></span></li>
+            <li><span id = "pear" class="ui-widget-content move fruits" ></span></li>
+            <li><span id = "cherry" class="ui-widget-content move fruits"></span></li>
+        </ul>
+
+        
+        
+        <div id="holder">
+            <!--<svg style="overflow: hidden; position: relative; top: -0.399994px;" xmlns="http://www.w3.org/2000/svg" width="400" version="1.1" height="400"><desc>Created with Raphaël 2.0.0</desc><defs></defs>
+
+                
+                <circle stroke-width="4" style="" stroke="#ffffff" fill="none" r="151" cy="200" cx="200"></circle>
+
+                <path d="M200,200L350,200A150,150,0,0,1,349.9999999999999,200.00000514945614Z" stroke="#ffffff" fill="none" style="" onmouseover="slice1()"></path>
+
+                <path d="M200,200L349.9999999999999,200.00000514945614A150,150,0,0,1,349.9999999987283,200.00061767466454Z" stroke="#ffffff" fill="none" style=""></path>
+
+                <path d="M200,200L349.9999999987283,200.00061767466454A150,150,0,0,1,349.9999999738394,200.00280146018991Z" stroke="#ffffff" fill="#cc3332" style=""></path>
+
+                <path d="M200,200L349.9999999738394,200.00280146018991A150,150,0,0,1,163.70979202038149,345.54387931066026Z" stroke="#ffffff" fill="#5bcc32" style=""></path>
+
+            <!--<path d="M200,200L163.70979202038149,345.54387931066026A150,150,0,0,1,163.7097815227291,345.5438766931537Z" stroke="#ffffff" fill="none" style=""></path><path d="M200,200L163.7097815227291,345.5438766931537A150,150,0,0,1,163.70975971991317,345.5438712567917Z" stroke="#ffffff" fill="none" style=""></path><path d="M200,200L163.70975971991317,345.5438712567917A150,150,0,0,1,107.65157294791925,81.79776642970525Z" stroke="#ffffff" fill="#32cc47" style=""></path><path d="M200,200L107.65157294791925,81.79776642970525A150,150,0,0,1,350,200Z" stroke="#ffffff" fill="#32cc47" style=""></path>
+
+                <text fill="#ffffff" stroke="none" font="100 20px &quot;Helvetica Neue&quot;, Helvetica, &quot;Arial Unicode MS&quot;, Arial, sans-serif" text-anchor="middle" y="20" x="200" style="text-anchor: middle; font: 100 20px &quot;Helvetica Neue&quot;,Helvetica,&quot;Arial Unicode MS&quot;,Arial,sans-serif;"><tspan dy="6.799999952316284"></tspan> 
+                </text>            </svg> -->
+        </div>
+
+
+
+        <ul id="carbs"> 
+            <li><span id = "bread" class="ui-widget-content move carbs" ></span></li>
+            <li><span id = "rice" class="ui-widget-content move carbs" ></span></li>
+            <li><span id = "corn" class="ui-widget-content move carbs" ></span></li>
+            <li><span id = "pasta" class="ui-widget-content move carbs"></span></li>
+            <li><span id = "fries" class="ui-widget-content move carbs" ></span></li>
+        </ul>   
+
+        <ul id="proteins"> 
+            <li><span id = "fish" class="ui-widget-content move proteins" ></span></li>
+            <li><span id = "egg" class="ui-widget-content move proteins" ></span></li>
+            <li><span id = "chicken" class="ui-widget-content move proteins" ></span></li>
+            <li><span id = "cheese" class="ui-widget-content move proteins"></span></li>
+            <li><span id = "steak" class="ui-widget-content move proteins" ></span></li>
+        </ul>
+
+
+
+        <!--<img id="jail" src="icons/jail.png">-->
+
+        
+        <button id="commit" onclick="makeList()">Commit!</button>
+
+        
+    
+</body></html>

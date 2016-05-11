@@ -1,0 +1,125 @@
+ul {
+	list-style-type: none;
+	margin-top: 50px;
+	position:absolute;
+}
+
+.move {
+	height: 35px;
+	width: 35px;
+	padding:5px;
+	display:inline-block;
+	background-image: url("icons/all-trans.png");
+	background-size: 500px 500px;
+	border-radius:50%;
+	text-align: center;
+}
+
+.nomove {
+	padding:5px;
+	display:inline-block;
+	color: white;
+	background-color:#E21B1B;
+	border-radius:10px;
+}
+
+#proteins, #carbs{
+ margin-top: 30%;
+}
+
+#carbs, #veggies {
+	margin-left:65%;
+}
+
+#fruits, #proteins {
+	margin-left:25%;
+}
+
+#commit {
+	background-color:#867E7E;
+	border-radius:5px;
+	margin-top:40%;
+}
+
+#jail {
+	position: relative;
+	right: 650px;
+
+}
+
+body {
+	text-align: center;
+}
+
+/* ICONS */
+
+#watermelon {
+	background-position: 5% 35%;
+}
+#banana {
+	background-position: 55% 5%;
+}
+#grapes {
+	background-position: 85% 15%;
+}
+#pear {
+	background-position: 15% 35%;
+}
+#cherry {
+	background-position: 95% 15%;
+}
+
+#fish {
+	background-position: 55% 85%;
+}
+
+#egg {
+	background-position:  5% 75%;
+}
+
+#chicken {
+	background-position: 45% 95%;
+}
+
+#steak {
+	background-position: 25% 25%;
+}
+
+#cheese 
+{	background-position: 35% 55%;
+}
+
+#tomato {
+	background-position: 15% 45%;
+}
+#carrot {
+	background-position: 5% 54.5%;
+}
+#greens {
+	background-position: 35% 45%;
+}
+#eggplant {
+	background-position: 5% 65%;
+}
+#capsicum {
+	background-position: 45% 55%;
+}
+
+#bread {
+	background-position: 94.5% 94%;
+}
+#rice {
+	background-position: 65% 95%;
+}
+#corn {
+	background-position: 45% 74%;
+}
+#pasta {
+	background-position: 85% 45%;
+}
+#fries {
+	background-position: 15% 5%;
+}
+
+.top {z-index: 100!important; position: relative}
+.bottom {z-index: 10!important; position: relative}
